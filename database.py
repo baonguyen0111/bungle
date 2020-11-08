@@ -8,7 +8,7 @@ def create():
     if not os.path.exists("bungle.db"):
         db = connect()
         cur = db.cursor()
-        cur.execute("CREATE TABLE users (username, password)")
+        cur.execute("CREATE TABLE users (username, salt, key)")
         cur.execute("CREATE TABLE history (username, query, time_issued)")
         db.commit()
 
@@ -32,7 +32,7 @@ def validateUser(username, password):
         return False
     salt = users[0][0]
     key = md5(salt + password.encode('utf-8')).hexdigest()
-    cur.execute("SELECT * FROM users WHERE username=? AND key=?", (username, key))
+    cur.execute("SELECT * FROM users WHERE username=? AND key=?",(username, key))
     if len(cur.fetchall()) < 1:
         return False
     return True
