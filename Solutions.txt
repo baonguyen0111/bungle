@@ -166,14 +166,15 @@ Additional Questions
 
 	Q1 (ungraded). How did you divide the work between partners? (Put N/A if worked alone)
 
-		[Your answer here]
+		We divided up the work so that we each worked on different attacks while reviewing
+		each other's work and offering suggestions.
 
 
 	Q2 (optional, ungraded). Did you use code snippets from anywhere online that you need to cite?
+		https://owasp.org/www-community/xss-filter-evasion-cheatsheet
 
-		[Your answer here]
 
 
 	Q3 (optional, ungraded). Do you have any suggestions for improving this assignment in the future?
 
-		[Your answer here]
+		The assignment overall is very clearly instructed and organized!
