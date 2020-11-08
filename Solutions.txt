@@ -123,7 +123,7 @@ Part 4: Better Defenses
 		variables are parameters. And as described in "Database Tips", "the database API can then 
 		be used to set the parameters before executing the query."
 		
-		Change the following in database.py:
+		Change the following line in validateUser(username, password) for database.py:
 		"cur.execute("SELECT * FROM users WHERE username='{}' AND password='{}'".format(username, password))"
 		into the following:
 		"cur.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))"
@@ -132,7 +132,25 @@ Part 4: Better Defenses
 	4.3) In 1-2 paragraphs, provide some advice to the Bunglers about how they should
 	     strengthen Bungle!'s defenses to prevent XSS attacks
 
-		TODO
+		It is important to realize that a large portion of XSS attacks occur because
+		the user-entered data are not properly sanitized hence get excuted as scripts
+		or different types of excutables. As a result, an important step for Bunglers
+		to take in preventing XSS attacks is to implement proper user-entered data
+		sanitizing procedures, including filtering out html tags, key words,and urls.
+		Another essential method that should also be implemented is to escape special
+		characters such as <, >, ", and ', preventing the user-entered data from
+		behaving like executable codes. At the same time, the Bunglers can also apply
+		constraints on the length of search inputs that user can provide and this can
+		assist in preventing certain XSS attacks that require long scripts. Lastly,
+		it is crucial to ensure that all outputs that will be returned to the users
+		are encoded before returned. However, it is worth noting that although these
+		mentioned methods can help prevent a large portion of the XSS attacks, it is
+		still possible to bypass these preventions. For example, although filtering
+		out sensitive content is useful, the filtering procedure may not be inclusive
+		of all possible tags or key words that can be used for XSS attacks which can
+		lead to potential vulnerability. As a result, it is essential to have consistent
+		efforts in preventing XSS attacks proactively.
+
 
 
 	4.4) In 1-2 paragraphs, provide some advice to the Bunglers about how they should
