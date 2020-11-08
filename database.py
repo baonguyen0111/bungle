@@ -24,7 +24,7 @@ def createUser(username, password):
 def validateUser(username, password):
     db_rw = connect()
     cur = db_rw.cursor()
-    cur.execute("SELECT * FROM users WHERE username='{}' AND password='{}'".format(username, password))
+    cur.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
     if len(cur.fetchall()) < 1:
         return False
     return True

