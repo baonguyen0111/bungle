@@ -16,15 +16,23 @@ def connect():
     return mdb.connect("bungle.db");
 
 def createUser(username, password):
+    salt = os.urandom(20)
+    key = md5(salt + password.encode('utf-8')).hexdigest()
     db_rw = connect()
     cur = db_rw.cursor()
-    cur.execute("INSERT INTO users (username, password) VALUES(?, ?)", (username, password))
+    cur.execute("INSERT INTO users (username, salt, key) VALUES(?, ?, ?)", (username, salt, key))
     db_rw.commit()
 
 def validateUser(username, password):
     db_rw = connect()
     cur = db_rw.cursor()
-    cur.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
+    cur.execute("SELECT salt FROM users WHERE username=?", (username,))
+    users = cur.fetchall()
+    if len(users) < 1:
+        return False
+    salt = users[0][0]
+    key = md5(salt + password.encode('utf-8')).hexdigest()
+    cur.execute("SELECT * FROM users WHERE username=? AND key=?", (username, key))
     if len(cur.fetchall()) < 1:
         return False
     return True
