@@ -110,8 +110,12 @@ Part 4: Better Defenses
 
 	4.1) Briefly describe how you implemented password salting and hashing
 
-        So in the database.py file, at first I use os.urandom(20) to create a random salt (this salt is different for each user). I change the database table for users so it's no longer (username, password) but (username, salt, key) where the key is the hash generated from the password concateanated with the salt. Then when the user logs in, using their username, I retrieve the salt, and use the same md5 algorithm to arrive at the hash, which I compare against the key in the database to
-        validate the user.
+        So in the database.py file, at first I use os.urandom(20) to create a random salt 
+		(this salt is different for each user). I change the database table for users so it's 
+		no longer (username, password) but (username, salt, key) where the key is the hash 
+		generated from the password concateanated with the salt. Then when the user logs in, 
+		using their username, I retrieve the salt, and use the same md5 algorithm to arrive 
+		at the hash, which I compare against the key in the database to validate the user.
 
 	4.2) Briefly describe the changes you made to database.py to prevent SQL injection attacks
 
@@ -153,8 +157,17 @@ Part 4: Better Defenses
 	4.4) In 1-2 paragraphs, provide some advice to the Bunglers about how they should
 	     strengthen Bungle!'s defenses to prevent CSRF attacks
 
-        So in our exercises, when there is XSS defense and no CSRF token required, the attack happens because the attacker could trick the user into clicking a link that would perform a post request to the log in site with the username/password controlled by the attacker. This makes the user vulnerable because the attacker can observe their behaviors. When there is CSRF token and no XSS defense, the attacker could take advantage of the XSS vulnerability to extract the CSRF token and make
-        the user log in. The Bunglers should enable XSS defense (sanitizing recursively tags, scripts, characters such as <, >, ; , ', ",...). This should limit the attackers' exploit of XSS vulnerability. Secondly, The Bunglers should enable CSRF token. With these 2 defenses in place, CSRF attacks are limited.
+        So in our exercises, when there is XSS defense and no CSRF token required, the 
+		attack happens because the attacker could trick the user into clicking a link 
+		that would perform a post request to the log in site with the username/password 
+		controlled by the attacker. This makes the user vulnerable because the attacker 
+		can observe their behaviors. When there is CSRF token and no XSS defense, the 
+		attacker could take advantage of the XSS vulnerability to extract the CSRF token 
+		and make the user log in. 
+		The Bunglers should enable XSS defense (sanitizing recursively tags, scripts, 
+		characters such as <, >, ; , ', ",...). This should limit the attackers' exploit 
+		of XSS vulnerability. Secondly, The Bunglers should enable CSRF token. With 
+		these 2 defenses in place, CSRF attacks are limited.
 
 ________________________________________________________________________________________
 
@@ -164,7 +177,8 @@ Additional Questions
 	Q1 (ungraded). How did you divide the work between partners? (Put N/A if worked alone)
 
 		We divided up the work so that we each worked on different attacks while reviewing
-		each other's work and offering suggestions. Chase works on Part 1 and 3 primarily and Bao works on part 2 and 4 primarily.
+		each other's work and offering suggestions. Chase works on Part 1 and 3 primarily 
+		and Bao works on part 2 and 4 primarily.
 
 
 	Q2 (optional, ungraded). Did you use code snippets from anywhere online that you need to cite?
